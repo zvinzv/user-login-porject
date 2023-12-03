@@ -17,6 +17,7 @@ const loginController = {
       if (!password) return res.status(400).json(Error400("Error Happen !", "Username or password error!"))
       //! Make Token For This User
       const token = jwt.sign(rows[0], secretJWT, {expiresIn: "24h"})
+      await pool.query<any>('UPDATE `users` SET `update_time` = NOW() WHERE `users`.`id` = ?', [rows[0].id])
       //! Send Data
       res.status(200).json({data: rows[0], token})
     } catch (error) {
